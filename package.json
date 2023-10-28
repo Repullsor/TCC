@@ -13,5 +13,8 @@
         "laravel-vite-plugin": "^0.7.5",
         "sass": "^1.56.1",
         "vite": "^4.4.9"
+    },
+    "dependencies": {
+        "bootstrap-datepicker": "^1.10.0"
     }
 }

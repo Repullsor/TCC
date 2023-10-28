@@ -11,8 +11,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user(); // Somente usúarios autenticados podem acessar
+
+        return view('profile.index', compact('user'));
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,8 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('dashboard', DashboardController::class);
+    Route::get('/profile', [UserController::class, 'index'])->name('profile.index');
+
 
 });
 
