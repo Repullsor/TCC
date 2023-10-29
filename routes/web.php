@@ -28,8 +28,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('dashboard', DashboardController::class);
     Route::get('/profile', [UserController::class, 'index'])->name('profile.index');
-
-
+    Route::get('/profile/edit/{id}', [UserController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update');
 });
 
 Auth::routes();

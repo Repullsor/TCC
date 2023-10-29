@@ -23,6 +23,7 @@ class User extends Authenticatable
         'address',
         'street',
         'number',
+        'neighborhood',
         'city',
         'state',
         'cep',
