@@ -40,14 +40,11 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nome:</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ auth()->user()->name }}">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', auth()->user()->name) }}">
+                            @error('name')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        {{-- <div class="form-group">
-                            <label for="exampleInputEmail1">Sobrenome:</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Sobrenome">
-                        </div> --}}
 
                         <div class="form-group">
                             <label for="email">E-mail:</label>
@@ -57,25 +54,44 @@
 
                         <div class="form-group">
                             <label for="date_of_birth">Data de Nascimento:</label>
-                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                                value="{{ auth()->user()->date_of_birth }}">
+                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', auth()->user()->date_of_birth) }}">
+                            @error('date_of_birth')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="sexo">Sexo:</label>
+                            <label for="gender">Sexo:</label>
                             <div class="input-group">
-                                <select class="form-control custom-select" id="sexo" name="sexo" required>
+                                <select class="form-control custom-select" id="gender" name="gender" required>
                                     <option value=""></option>
-                                    <option value="feminino">Feminino</option>
-                                    <option value="masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Masculino">Masculino</option>
                                 </select>
                             </div>
+                            @error('gender')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height">Altura:</label>
+                            <input type="number" class="form-control" id="height" name="height"
+                                value="{{ auth()->user()->height }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight">Peso:</label>
+                            <input type="number" class="form-control" id="weight" name="weight"
+                                value="{{ auth()->user()->weight }}">
                         </div>
 
                         <div class="form-group">
                             <label for="phone_number">Telefone para contato:</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number"
-                                placeholder="(00) 90000-0000" data-mask="(99) 99999-9999">
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="(00) 90000-0000" data-mask="(99) 99999-9999">
+                            @error('phone_number')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">

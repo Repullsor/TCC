@@ -37,12 +37,24 @@
             <p class="text-muted text-center">Software Engineer</p>
             <div class="card-body">
                 <div class="form-group">
+                    <label>E-mail:</label>
+                    <p>{{ auth()->user()->email }}</p>
+                </div>
+                <div class="form-group">
                     <label>Data de Nascimento:</label>
                     <p>{{ auth()->user()->date_of_birth }}</p>
                 </div>
                 <div class="form-group">
                     <label>Sexo:</label>
                     <p>{{ auth()->user()->gender }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Altura:</label>
+                    <p>{{ auth()->user()->height }}</p>
+                </div>
+                <div class="form-group">
+                    <label>Peso:</label>
+                    <p>{{ auth()->user()->weight }}</p>
                 </div>
                 <div class="form-group">
                     <label>Telefone para contato:</label>
@@ -87,10 +99,52 @@
     </div>
     </div>
 
-
     </section>
 
-
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
+<script>
+    $(document).ready(function() {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+
+        var alertSuccess = "{{ Session::get('success') }}"
+        var alertError = "{{ Session::get('error') }}"
+        var alertInfo = "{{ Session::get('info') }}"
+        var alertWarning = "{{ Session::get('warning') }}"
+
+        if (alertSuccess) {
+            toastr.success(alertSuccess);
+        }
+
+        if (alertError) {
+            toastr.error(alertError);
+        }
+
+        if (alertInfo) {
+            toastr.info(alertInfo);
+        }
+
+        if (alertWarning) {
+            toastr.warning(alertWarning);
+        }
+    });
+</script>

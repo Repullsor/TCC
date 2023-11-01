@@ -63,23 +63,23 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'date_of_birth' => 'date',
-            'gender' => 'string',
-            'address' => 'string',
-            'street' => 'string',
-            'number' => 'string',
-            'neighborhood' => 'string',
-            'city' => 'string',
-            'state' => 'string',
-            'cep' => 'string',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|string',
+            'address' => 'nullable|string',
+            'street' => 'nullable|string',
+            'number' => 'nullable|string',
+            'neighborhood' => 'nullable|string',
+            'city' => 'nullable|string',
+            'state' => 'nullable|string',
+            'cep' => 'nullable|string',
             'phone_number' => 'required|numeric|celular_com_ddd',
-            'cpf' => 'string',
-            'height' => 'numeric',
-            'weight' => 'numeric',
-            'allergies' => 'string',
-            'medical_conditions' => 'string',
+            'cpf' => 'nullable|string',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'allergies' => 'nullable|string',
+            'medical_conditions' => 'nullable|string',
         ]);
-        
+
         $user->update($validatedData);
 
         return redirect()->route('profile.index')->with('success', 'Perfil atualizado com sucesso');
