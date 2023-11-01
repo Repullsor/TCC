@@ -3,13 +3,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 @extends('adminlte::page')
 
-@section('title', 'Profile')
+@section('title', 'Edit Profile')
 
 @section('content')
 
+    <style>
+        .error-message {
+            color: #ff0000;
+            font-weight: bold;
+            background-color: transparent;
+            border: none;
+            padding: 0;
+        }
+    </style>
 
     <section class="content-header">
         <div class="container-fluid">
@@ -40,10 +50,13 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label for="name">Nome:</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', auth()->user()->name) }}">
-                            @error('name')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ old('name', auth()->user()->name) }}">
+                            @if ($errors->has('name'))
+                                <div class="error-message">
+                                    <strong class="error-message">* {{ $errors->first('name') }}</strong>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="form-group">
@@ -54,44 +67,50 @@
 
                         <div class="form-group">
                             <label for="date_of_birth">Data de Nascimento:</label>
-                            <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', auth()->user()->date_of_birth) }}">
-                            @error('date_of_birth')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <input type="text" class="form-control" id="date_of_birth" name="date_of_birth">
+                            @if ($errors->has('date_of_birth'))
+                                <div class="error-message">
+                                    <strong>* {{ $errors->first('date_of_birth') }}</strong>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="form-group">
                             <label for="gender">Sexo:</label>
                             <div class="input-group">
                                 <select class="form-control custom-select" id="gender" name="gender" required>
-                                    <option value=""></option>
+                                    <option value=" "></option>
                                     <option value="Feminino">Feminino</option>
                                     <option value="Masculino">Masculino</option>
                                 </select>
                             </div>
-                            @error('gender')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            @if ($errors->has('gender'))
+                                <div class="alert alert-danger error-message">
+                                    * {{ $errors->first('gender') }}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="form-group">
-                            <label for="height">Altura:</label>
+                            <label for="height">Altura (m):</label>
                             <input type="number" class="form-control" id="height" name="height"
                                 value="{{ auth()->user()->height }}">
                         </div>
 
                         <div class="form-group">
-                            <label for="weight">Peso:</label>
+                            <label for="weight">Peso (kg):</label>
                             <input type="number" class="form-control" id="weight" name="weight"
                                 value="{{ auth()->user()->weight }}">
                         </div>
 
                         <div class="form-group">
                             <label for="phone_number">Telefone para contato:</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="(00) 90000-0000" data-mask="(99) 99999-9999">
-                            @error('phone_number')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                            <input type="text" class="form-control" id="phone_number" name="phone_number">
+                            @if ($errors->has('phone_number'))
+                                <div class="error-message">
+                                    <strong>* {{ $errors->first('phone_number') }}</strong>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="form-group">
@@ -149,25 +168,12 @@
         </div>
         </div>
     </section>
+
 @endsection
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6/jquery.inputmask.min.js"></script> --}}
-
-{{-- <script type="text/javascript">
-    $(function() {
-        $('#datetimepicker14').datetimepicker({
-            allowMultidate: true,
-            multidateSeparator: ','
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        $('.phone_number').mask('(99) 99999-9999');
-    });
-</script> --}}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -191,6 +197,37 @@
                     }
                 });
             }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#phone_number').inputmask("(99) 99999-9999");
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#date_of_birth').inputmask("99/99/9999");
+
+        // Inicialize o DatePicker com localização em pt-BR
+        $('#date_of_birth').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto',
+                'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ],
+            monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out',
+                'Nov', 'Dez'
+            ],
+            dayNames: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira',
+                'Sexta-feira', 'Sábado'
+            ],
+            dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+            dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+            isRTL: false
         });
     });
 </script>

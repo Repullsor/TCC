@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-
-
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -15,6 +14,7 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user(); // Somente usúarios autenticados podem acessar
+        $user->date_of_birth_formatted = Carbon::parse($user->date_of_birth)->format('d/m/Y'); // Formatação para exibir a data em pt-br
 
         return view('profile.index', compact('user'));
     }
@@ -63,7 +63,7 @@ class UserController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'date_of_birth' => 'required|date',
+            'date_of_birth' => 'required|date_format:d/m/Y',
             'gender' => 'required|string',
             'address' => 'nullable|string',
             'street' => 'nullable|string',
@@ -72,12 +72,24 @@ class UserController extends Controller
             'city' => 'nullable|string',
             'state' => 'nullable|string',
             'cep' => 'nullable|string',
-            'phone_number' => 'required|numeric|celular_com_ddd',
+            'phone_number' => 'required|celular_com_ddd',
             'cpf' => 'nullable|string',
             'height' => 'nullable|numeric',
             'weight' => 'nullable|numeric',
             'allergies' => 'nullable|string',
             'medical_conditions' => 'nullable|string',
+
+        ], [
+            'required' => ':attribute é obrigatório',
+            'string' => 'O campo :attribute deve ser uma string',
+            'date_format' => 'O campo :attribute deve ser uma data válida',
+            'numeric' => 'O campo :attribute deve conter apenas números',
+            'celular_com_ddd' => 'O campo :attribute deve estar no formato correto',
+        ], [
+            'name' => 'Nome',
+            'date_of_birth' => 'Data de Nascimento',
+            'gender' => 'O campo Sexo',
+            'phone_number' => 'Número de Telefone',
         ]);
 
         $user->update($validatedData);

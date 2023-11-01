@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Device::class);
     }
+
+    public function setDateOfBirthAttribute($value)
+    {
+        $this->attributes['date_of_birth'] = \Carbon\Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
+    }
 }
