@@ -19,6 +19,10 @@
             border: none;
             padding: 0;
         }
+
+        .mandatory {
+            color: #ff0000;
+        }
     </style>
 
     <section class="content-header">
@@ -34,138 +38,165 @@
         <div class="d-flex justify-content-center">
             <div class="card card-primary card-outline col-md-6 mx-auto">
                 <div class="card-body box-profile">
-                    <div class="text-center">
-                        <label for="profile-image" style="cursor: pointer;">
-                            <i class="fa-solid fa-circle-user" style="font-size: 128px;"></i>
-                        </label>
-                        <input type="file" id="profile-image" name="profile-image" accept="image/*"
-                            style="display: none;">
+                    <!-- Conteúdo da primeira coluna -->
+                    <div>
+                        <div>
+                            <div class="text-center">
+                                <label for="profile-image" style="cursor: pointer;">
+                                    <i class="fa-solid fa-circle-user" style="font-size: 100px;"></i>
+                                </label>
+                                <input type="file" id="profile-image" name="profile-image" accept="image/*"
+                                    style="display: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="profile-username text-center">{{ auth()->user()->name }}</h3>
+                            {{-- <p class="text-muted text-center">Software Engineer</p> --}}
+                        </div>
+                        <hr>
                     </div>
+                    <!-- Conteúdo da segunda coluna -->
+                    <form method="POST" action="{{ route('profile.update') }}">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Nome<strong class="mandatory">*</strong>:</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ old('name', auth()->user()->name) }}">
+                                    @if ($errors->has('name'))
+                                        <div class="error-message">
+                                            <strong class="error-message">* {{ $errors->first('name') }}</strong>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email">E-mail:</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="{{ auth()->user()->email }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="date_of_birth">Data de Nascimento<strong class="mandatory">*</strong>:</label>
+                                    <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth', $user->date_of_birth_formatted) }}">
+                                    @if ($errors->has('date_of_birth'))
+                                        <div class="error-message">
+                                            <strong>* {{ $errors->first('date_of_birth') }}</strong>
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="gender">Sexo<strong class="mandatory">*</strong>:</label>
+                                    <div class="input-group">
+                                        <select class="form-control custom-select" id="gender" name="gender" required>
+                                            <option value=" "></option>
+                                            <option value="Feminino" {{ (old('gender', $user->gender) == 'Feminino') ? 'selected' : '' }}>Feminino</option>
+                                            <option value="Masculino" {{ (old('gender', $user->gender) == 'Masculino') ? 'selected' : '' }}>Masculino</option>
+                                        </select>
+                                    </div>
+                                    @if ($errors->has('gender'))
+                                        <div class="alert alert-danger error-message">
+                                            * {{ $errors->first('gender') }}
+                                        </div>
+                                    @endif
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="height">Altura (m):</label>
+                                    <input type="number" class="form-control" id="height" name="height"
+                                        value="{{ auth()->user()->height }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="weight">Peso (kg):</label>
+                                    <input type="number" class="form-control" id="weight" name="weight"
+                                        value="{{ auth()->user()->weight }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="cpf">CPF<strong class="mandatory">*</strong>:</label>
+                                    <input type="text" class="form-control" id="cpf" name="cpf"
+                                        value="{{ auth()->user()->cpf }}">
+                                    @if ($errors->has('cpf'))
+                                        <div class="alert alert-danger error-message">
+                                            * {{ $errors->first('cpf') }}
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="phone_number">Telefone para contato<strong class="mandatory">*</strong>:</label>
+                                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}">
+                                    @if ($errors->has('phone_number'))
+                                        <div class="error-message">
+                                            <strong>* {{ $errors->first('phone_number') }}</strong>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <!-- Conteúdo da terceira coluna -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="cep">CEP:</label>
+                                    <input type="text" class="form-control" id="cep" name="cep"
+                                        value="{{ auth()->user()->cep }}">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-10">
+                                        <label for="street">Rua (Logradouro):</label>
+                                        <input type="text" class="form-control" id="street" name="street"
+                                            value="{{ auth()->user()->street }}">
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="number">Nº:</label>
+                                        <input type="text" class="form-control" id="number" name="number"
+                                            value="{{ auth()->user()->number }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="neighborhood">Bairro:</label>
+                                    <input type="text" class="form-control" id="neighborhood" name="neighborhood"
+                                        value="{{ auth()->user()->neighborhood }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="city">Cidade:</label>
+                                    <input type="text" class="form-control" id="city" name="city"
+                                        value="{{ auth()->user()->city }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="state">Estado:</label>
+                                    <input type="text" class="form-control" id="state" name="state"
+                                        value="{{ auth()->user()->state }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="allergies"> Alergias:</label>
+                                    <input type="text" class="form-control" id="allergies" name="allergies"
+                                        value="{{ auth()->user()->allergies }}">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="medical_conditions">Condições médicas:</label>
+                                    <input type="text" class="form-control" id="medical_conditions"
+                                        name="medical_conditions" value="{{ auth()->user()->medical_conditions }}">
+                                </div>
+                                <strong class="mandatory">* Campos obrigatórios</strong>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
                 </div>
-
-                <h3 class="profile-username text-center">{{ auth()->user()->name }}</h3>
-                <p class="text-muted text-center">Software Engineer</p>
-                <form method="POST" action="{{ route('profile.update') }}">
-                    @csrf
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">Nome:</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ old('name', auth()->user()->name) }}">
-                            @if ($errors->has('name'))
-                                <div class="error-message">
-                                    <strong class="error-message">* {{ $errors->first('name') }}</strong>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">E-mail:</label>
-                            <input type="email" class="form-control" id="email" name="email"
-                                value="{{ auth()->user()->email }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="date_of_birth">Data de Nascimento:</label>
-                            <input type="text" class="form-control" id="date_of_birth" name="date_of_birth">
-                            @if ($errors->has('date_of_birth'))
-                                <div class="error-message">
-                                    <strong>* {{ $errors->first('date_of_birth') }}</strong>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label for="gender">Sexo:</label>
-                            <div class="input-group">
-                                <select class="form-control custom-select" id="gender" name="gender" required>
-                                    <option value=" "></option>
-                                    <option value="Feminino">Feminino</option>
-                                    <option value="Masculino">Masculino</option>
-                                </select>
-                            </div>
-                            @if ($errors->has('gender'))
-                                <div class="alert alert-danger error-message">
-                                    * {{ $errors->first('gender') }}
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label for="height">Altura (m):</label>
-                            <input type="number" class="form-control" id="height" name="height"
-                                value="{{ auth()->user()->height }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="weight">Peso (kg):</label>
-                            <input type="number" class="form-control" id="weight" name="weight"
-                                value="{{ auth()->user()->weight }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone_number">Telefone para contato:</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number">
-                            @if ($errors->has('phone_number'))
-                                <div class="error-message">
-                                    <strong>* {{ $errors->first('phone_number') }}</strong>
-                                </div>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label for="cep">CEP:</label>
-                            <input type="text" class="form-control" id="cep" name="cep"
-                                value="{{ auth()->user()->cep }}">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group col-md-10">
-                                <label for="street">Rua (Logradouro):</label>
-                                <input type="text" class="form-control" id="street" name="street"
-                                    value="{{ auth()->user()->street }}">
-                            </div>
-
-                            <div class="form-group col-md-2">
-                                <label for="number">Nº:</label>
-                                <input type="text" class="form-control" id="number" name="number"
-                                    value="{{ auth()->user()->number }}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="neighborhood">Bairro:</label>
-                            <input type="text" class="form-control" id="neighborhood" name="neighborhood"
-                                value="{{ auth()->user()->neighborhood }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="city">Cidade:</label>
-                            <input type="text" class="form-control" id="city" name="city"
-                                value="{{ auth()->user()->city }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="state">Estado:</label>
-                            <input type="text" class="form-control" id="state" name="state"
-                                value="{{ auth()->user()->state }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="allergies"> Alergias:</label>
-                            <input type="text" class="form-control" id="allergies" name="allergies"
-                                value="{{ auth()->user()->allergies }}">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="medical_conditions">Condições médicas:</label>
-                            <input type="text" class="form-control" id="medical_conditions" name="medical_conditions"
-                                value="{{ auth()->user()->medical_conditions }}">
-                        </div>
-                </form>
-                <button type="submit" class="btn btn-primary">Salvar</button>
             </div>
-        </div>
         </div>
     </section>
 
@@ -209,9 +240,16 @@
 
 <script>
     $(document).ready(function() {
+        $('#cpf').inputmask("999.999.999-99", {
+            clearMaskOnLostFocus: false
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
         $('#date_of_birth').inputmask("99/99/9999");
 
-        // Inicialize o DatePicker com localização em pt-BR
         $('#date_of_birth').datepicker({
             dateFormat: 'dd/mm/yy',
             changeMonth: true,
@@ -231,3 +269,5 @@
         });
     });
 </script>
+
+

@@ -23,16 +23,18 @@
     </section>
 
     <div class="d-flex justify-content-center">
-        <div class="card card-primary card-outline col-md-8 mx-auto">
+        <div class="card card-primary card-outline col-md-6 mx-auto">
             <div class="card-body box-profile">
                 <div class="text-center">
-                    <label for="profile-image" style="cursor: pointer;">
+                    @if (file_exists(public_path('caminho/para/sua/imagem.jpg')))
+                        <img src="caminho/para/sua/imagem.jpg" alt="Imagem do Perfil" style="max-width: 128px; max-height: 128px;">
+                    @else
                         <i class="fa-solid fa-circle-user" style="font-size: 128px;"></i>
-                    </label>
-                    <input type="file" id="profile-image" name="profile-image" accept="image/*" style="display: none;">
+                    @endif
                 </div>
                 <hr>
             </div>
+            
 
             <div class="container">
                 <div class="row">
@@ -42,7 +44,7 @@
 
                         <div class="form-group">
                             <label>CPF:</label>
-                            <p></p>
+                            <p>{{ $user->cpf }}</p>
                         </div>
                         <div class="form-group">
                             <label>Data de Nascimento:</label>

@@ -51,6 +51,8 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
+        $user->date_of_birth_formatted = Carbon::parse($user->date_of_birth)->format('d/m/Y');
+
         return view('profile.edit', compact('user'));
     }
 
@@ -73,7 +75,7 @@ class UserController extends Controller
             'state' => 'nullable|string',
             'cep' => 'nullable|string',
             'phone_number' => 'required|celular_com_ddd',
-            'cpf' => 'nullable|string',
+            'cpf' => 'required|cpf',
             'height' => 'nullable|numeric',
             'weight' => 'nullable|numeric',
             'allergies' => 'nullable|string',
@@ -90,6 +92,7 @@ class UserController extends Controller
             'date_of_birth' => 'Data de Nascimento',
             'gender' => 'O campo Sexo',
             'phone_number' => 'Número de Telefone',
+            'cpf' => 'CPF',
         ]);
 
         $user->update($validatedData);

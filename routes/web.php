@@ -16,15 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
 
-// Route::get('/', function () {
-//     return redirect()->route('login');
-// });
-
-Route::group(['middleware' => ['auth']], function () {
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('home');
+    });
 
     Route::resource('dashboard', DashboardController::class);
     Route::get('/profile', [UserController::class, 'index'])->name('profile.index');
