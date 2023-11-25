@@ -26,15 +26,17 @@
         <div class="card card-primary card-outline col-md-6 mx-auto">
             <div class="card-body box-profile">
                 <div class="text-center">
-                    @if (file_exists(public_path('caminho/para/sua/imagem.jpg')))
-                        <img src="caminho/para/sua/imagem.jpg" alt="Imagem do Perfil" style="max-width: 128px; max-height: 128px;">
+                    @if (auth()->user()->profile_picture)
+                        <img src="{{ asset($user->profile_picture) }}" alt="Imagem de Perfil"
+                            style="max-width: 128px; max-height: 128px;">
                     @else
                         <i class="fa-solid fa-circle-user" style="font-size: 128px;"></i>
                     @endif
                 </div>
                 <hr>
             </div>
-            
+
+
 
             <div class="container">
                 <div class="row">

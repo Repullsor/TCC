@@ -11,7 +11,9 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+
+        return view('device.index', compact('user'));
     }
 
     /**
@@ -19,7 +21,9 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        //
+        $user = auth()->user();
+
+        return view('device.create', compact('user'));
     }
 
     /**

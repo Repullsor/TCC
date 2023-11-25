@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\DiabetesImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
-class BloodPressureMeasurementController extends Controller
+
+class BloodPressureController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $measurements = $user->pressure;
+
+        return view('pressure.index', compact('user', 'measurements'));
     }
 
     /**
@@ -61,4 +67,6 @@ class BloodPressureMeasurementController extends Controller
     {
         //
     }
+
+    
 }

@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBloodPressureMeasurementsTable extends Migration
+class CreateBloodPressuresTable extends Migration
 {
     public function up()
     {
-        Schema::create('blood_pressure_measurements', function (Blueprint $table) {
+        Schema::create('blood_pressures', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('device_id'); // Chave estrangeira para dispositivos
             $table->unsignedBigInteger('user_id'); // Chave estrangeira para usuários
@@ -22,6 +22,6 @@ class CreateBloodPressureMeasurementsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('blood_pressure_measurements');
+        Schema::dropIfExists('blood_pressure');
     }
 };

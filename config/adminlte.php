@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>Pressão e Diabetes</b>',
+    'logo_img' => 'images/LogoTCC.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'Pressão e Diabetes Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -293,7 +293,7 @@ return [
         // Navbar items:
         [
             'text' => 'Home',
-            'url' => '/',
+            'url' => '/dashboard',
             'topnav' => true,
             'classes' => 'auto',
         ],
@@ -332,8 +332,12 @@ return [
         ['header' => 'Painel de Controle'],
         [
             'text' => 'Gráficos',
-            'url'  => 'admin/settings',
+            'url'  => '/dashboard',
             'icon' => 'fa-solid fa-chart-pie',
+        ],[
+            'text' => 'Estatísticas',
+            'url'  => 'admin/settings',
+            'icon' => 'fa-solid fa-chart-column',
         ],
         [
             'text'    => 'Medições',
@@ -343,15 +347,20 @@ return [
 
                 [
                     'text'    => 'Pressão Arterial',
-                    'url'     => '#',
+                    'url'     => '/pressure',
                 ],
                 [
                     'text' => 'Glicemia',
-                    'url'  => '#',
+                    'url'  => '/diabetes',
                 ],
             ],
         ],
         ['header' => 'Configurações'],
+        [
+            'text' => 'Dispositivos',
+            'url'  => '/device',
+            'icon' => 'fas fa-laptop-medical',
+        ],
         [
             'text' => 'Perfil',
             'url'  => '/profile',

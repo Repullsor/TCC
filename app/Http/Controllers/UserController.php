@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -80,6 +81,7 @@ class UserController extends Controller
             'weight' => 'nullable|numeric',
             'allergies' => 'nullable|string',
             'medical_conditions' => 'nullable|string',
+            'profile-image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ], [
             'required' => ':attribute é obrigatório',
@@ -97,8 +99,20 @@ class UserController extends Controller
 
         $user->update($validatedData);
 
-        return redirect()->route('profile.index')->with('success', 'Perfil atualizado com sucesso');
+         // Lógica para upload da foto
+    if ($request->hasFile('profile-image')) {
+        // Excluir a foto antiga se existir
+        if ($user->profile_picture) {
+            Storage::delete($user->profile_picture);
+        }
+
+        // Fazer o upload da nova foto
+        $imageData = file_get_contents($request->file('profile-image')->getRealPath());
+        $user->update(['profile_picture' => $imageData]);
     }
+
+    return redirect()->route('profile.index')->with('success', 'Perfil atualizado com sucesso');
+}
 
     /**
      * Remove the specified resource from storage.

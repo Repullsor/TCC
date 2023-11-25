@@ -14,13 +14,13 @@ class Device extends Model
         'blood_pressure_id',
     ];
 
-    public function diabetesMeasurement()
+    public function diabetes()
     {
-        return $this->belongsTo(DiabetesMeasurement::class, 'diabetes_id');
+        return $this->belongsTo(Diabetes::class, 'diabetes_id');
     }
 
-    public function bloodPressureMeasurement()
+    public function bloodPressure()
     {
-        return $this->belongsTo(BloodPressureMeasurement::class, 'blood_pressure_id');
+        return $this->belongsTo(BloodPressure::class, 'blood_pressure_id');
     }
 }

@@ -56,7 +56,7 @@
                         <hr>
                     </div>
                     <!-- Conteúdo da segunda coluna -->
-                    <form method="POST" action="{{ route('profile.update') }}">
+                    <form method="POST" action="{{ route('profile.update') }}"> <!-- ['id' => $user->id]) -->
                         @csrf
                         <div class="row">
                             <div class="col-md-6">

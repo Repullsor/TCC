@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Diabetes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,7 +13,24 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+        $measurements = Diabetes::where('user_id', $user->id)->get();
+
+        $startDate = $measurements->min('created_at');
+        $endDate = $measurements->max('created_at');
+
+        $labels = [];
+        $values = [];
+
+        $currentDate = Carbon::parse($startDate);
+
+        while ($currentDate->lte(Carbon::parse($endDate))) {
+            $labels[] = $currentDate->format('Y-m-d');
+            $values[] = $measurements->where('created_at', '>=', $currentDate)->where('created_at', '<', $currentDate->copy()->addDay())->avg('glucose_level') ?? 0;
+            $currentDate->addDay();
+        }
+
+        return view('dashboard.index', compact('user', 'labels', 'values'));
     }
 
     /**

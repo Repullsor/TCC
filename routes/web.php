@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\BloodPressureController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\DiabetesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -17,17 +20,27 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return view('home');
-    });
 
+Route::get('/', function () {
+    return redirect()->route('dashboard.index');
+});
+
+Route::middleware(['auth'])->group(function () {
     Route::resource('dashboard', DashboardController::class);
     Route::get('/profile', [UserController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit/{id}', [UserController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update');
+    // Route::post('/profile/update/{id}', [UserController::class, 'update'])->name('profile.update'); //assim deu o problema pra resolver tem que ser assim: 
+    Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update'); // assim tambem funcionou depois que comentei a linha de cima
+    Route::resource('diabetes', DiabetesController::class);
+    Route::resource('pressure', BloodPressureController::class);
+    Route::get('/diabetes', [DiabetesController::class, 'index'])->name('diabetes.index');
+    Route::post('/import', [DiabetesController::class, 'import']);
+
+    Route::resource('device', DeviceController::class);
+    Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
+    Route::get('/device/create', [DeviceController::class, 'create'])->name('device.create');
+
+
 });
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

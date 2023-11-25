@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BloodPressureMeasurement extends Model
+class Diabetes extends Model
 {
     protected $fillable = [
         'device_id',
         'user_id',
-        'systolic',
-        'diastolic',
+        'glucose_level',
         'classification',
         'comments',
     ];

@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\DiabetesImport;
+use App\Models\Diabetes;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
-class DiabetesMeasurementController extends Controller
+
+class DiabetesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $user = auth()->user();
+
+        $diabetesData = Diabetes::all();
+
+        return view('diabetes.index', compact('diabetesData'));
     }
 
     /**
@@ -60,5 +69,18 @@ class DiabetesMeasurementController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        $file = $request->file('file');
+
+        Excel::import(new DiabetesImport, $file);
+
+        return redirect()->route('diabetes.index')->with('success', 'Planilha importada com sucesso!');
     }
 }
