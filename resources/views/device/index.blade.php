@@ -24,15 +24,9 @@
 
         <div class="row justify-content-center">
             <div class="col-md-8">
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title"> </h3>
+                        <h3 class="card-title">Dispositivos</h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
                                 {{-- <i class="fas fa-minus"></i> --}}
@@ -51,46 +45,82 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @forelse($devices as $device) --}}
-                                <tr>
-                                    <td>1</td>
-                                    <td>Pressão Arterial</td>
-                                    <td>G-TECH</td>
-                                    <td>RW-450</td>
-                                    <td class="text-center py-0 align-middle">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i></a>
-                                            <a href="#" class="btn btn-success"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Glicemia</td>
-                                    <td>Roche Diabetes</td>
-                                    <td>Accu-Chek Guide</td>
-                                    <td class="text-center py-0 align-middle">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="#" class="btn btn-primary"><i class="fas fa-eye"></i></a>
-                                            <a href="#" class="btn btn-success"><i class="fas fa-edit"></i></a>
-                                            <a href="#" class="btn btn-danger"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {{-- @empty --}}
-                                <tr>
-                                    {{-- <td colspan="3">Nenhum dispositivo encontrado.</td> --}}
-                                </tr>
-                                {{-- @endforelse --}}
+                                @foreach ($devices as $key => $device)
+                                    <tr>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $device->type }}</td>
+                                        <td>{{ $device->brand }}</td>
+                                        <td>{{ $device->model }}</td>
+                                        <td class="text-center py-0 align-middle">
+                                                <a href="{{ route('device.show', $device->id) }}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('device.edit', $device->id) }}" class="btn btn-success"><i class="fas fa-edit"></i></a>
+                                                <form action="{{ route('device.destroy', $device->id) }}" method="post" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                                </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @if ($devices->isEmpty())
+                                    <tr>
+                                        <td colspan="5">Nenhum dispositivo encontrado.</td>
+                                    </tr>
+                                @endif
                             </tbody>
+                            
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+        
 
 
     @endsection
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            var alertSuccess = "{{ Session::get('success') }}"
+            var alertError = "{{ Session::get('error') }}"
+            var alertInfo = "{{ Session::get('info') }}"
+            var alertWarning = "{{ Session::get('warning') }}"
+
+            if (alertSuccess) {
+                toastr.success(alertSuccess);
+            }
+
+            if (alertError) {
+                toastr.error(alertError);
+            }
+
+            if (alertInfo) {
+                toastr.info(alertInfo);
+            }
+
+            if (alertWarning) {
+                toastr.warning(alertWarning);
+            }
+        });
+    </script>

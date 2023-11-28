@@ -39,8 +39,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('device', DeviceController::class);
     Route::get('/device', [DeviceController::class, 'index'])->name('device.index');
     Route::get('/device/create', [DeviceController::class, 'create'])->name('device.create');
-
-
+    Route::delete('/device/{id}', [DeviceController::class, 'destroy'])->name('device.destroy');
+    Route::get('/device/{id}/edit', [DeviceController::class, 'edit'])->name('device.edit');
+    Route::put('/device/{id}', [DeviceController::class, 'update'])->name('device.update');
+    
 });
 
 Auth::routes();
