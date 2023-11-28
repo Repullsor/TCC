@@ -18,7 +18,8 @@ class DiabetesController extends Controller
     {
         $user = auth()->user();
 
-        $diabetesData = Diabetes::all();
+        $diabetesData = Diabetes::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
 
         return view('diabetes.index', compact('diabetesData'));
     }

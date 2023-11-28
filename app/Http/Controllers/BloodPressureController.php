@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\DiabetesImport;
+use App\Models\BloodPressure;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -15,10 +16,11 @@ class BloodPressureController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $measurements = $user->pressure;
+        $bloodPressureData = BloodPressure::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('pressure.index', compact('user', 'measurements'));
+        return view('pressure.index', compact('user', 'bloodPressureData'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -67,6 +69,4 @@ class BloodPressureController extends Controller
     {
         //
     }
-
-    
 }
