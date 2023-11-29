@@ -14,7 +14,7 @@ class CreateBloodPressuresTable extends Migration
             $table->unsignedBigInteger('user_id'); // Chave estrangeira para usuários
             $table->integer('systolic'); // Pressão sistólica
             $table->integer('diastolic'); // Pressão diastólica
-            $table->enum('classification', ['normal', 'alta', 'baixa']); // Classificação
+            $table->enum('classification', ['Normal', 'Alta', 'Baixa']); // Classificação
             $table->text('comments')->nullable(); // Comentários opcionais
             $table->timestamps();
         });

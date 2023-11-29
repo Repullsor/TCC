@@ -82,7 +82,6 @@
                                             <th>Sistólica</th>
                                             <th>Diastólica</th>
                                             <th>Classificação</th>
-                                            <th>Comentários</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,7 +93,6 @@
                                                 <td>{{ $data->systolic }}</td>
                                                 <td>{{ $data->diastolic }}</td>
                                                 <td>{{ $data->classification }}</td>
-                                                <td>{{ $data->comments }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

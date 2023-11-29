@@ -12,6 +12,8 @@ class Diabetes extends Model
         'glucose_level',
         'classification',
         'comments',
+        'measurement_date',
+        'measurement_time',
     ];
 
     public function device()

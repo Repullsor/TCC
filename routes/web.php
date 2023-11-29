@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('diabetes', DiabetesController::class);
     Route::resource('pressure', BloodPressureController::class);
     Route::get('/diabetes', [DiabetesController::class, 'index'])->name('diabetes.index');
-    Route::post('/import', [DiabetesController::class, 'import']);
+    Route::post('/diabetes/import', [DiabetesController::class, 'import'])->name('diabetes.import');
+
 
     Route::resource('device', DeviceController::class);
     Route::get('/device', [DeviceController::class, 'index'])->name('device.index');

@@ -6,7 +6,10 @@ use App\Imports\DiabetesImport;
 use App\Models\Diabetes;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+
 
 
 class DiabetesController extends Controller
@@ -73,15 +76,18 @@ class DiabetesController extends Controller
     }
 
     public function import(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,csv',
-        ]);
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv',
+    ]);
 
-        $file = $request->file('file');
+    $file = $request->file('file');
+    $user = auth()->user(); // Obtenha o usuário autenticado
 
-        Excel::import(new DiabetesImport, $file);
+    // Use a instância do importador para processar o arquivo Excel
+    $import = new DiabetesImport($user);
+    Excel::import($import, $file);
 
-        return redirect()->route('diabetes.index')->with('success', 'Planilha importada com sucesso!');
-    }
+    return redirect()->back()->with('success', 'Dados importados com sucesso!');
+}
 }

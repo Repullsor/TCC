@@ -7,17 +7,21 @@ use Illuminate\Support\Facades\Schema;
 class CreateDiabetesTable extends Migration
 {
     public function up()
-    {
-        Schema::create('diabetes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('device_id'); // Chave estrangeira para dispositivos
-            $table->unsignedBigInteger('user_id'); // Chave estrangeira para usuários
-            $table->decimal('glucose_level', 5, 2); // Nível de glicose
-            $table->enum('classification', ['normal', 'alta', 'baixa']); // Classificação
-            $table->text('comments')->nullable(); // Comentários opcionais
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('diabetes', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('device_id');
+        $table->unsignedBigInteger('user_id');
+        $table->unsignedInteger('glucose_level')->nullable()->default(null)->limit(3);
+        $table->enum('classification', ['Normal', 'Alta', 'Baixa']);
+        $table->text('comments')->nullable();
+        $table->date('measurement_date')->nullable(); // Campo para a data
+        $table->time('measurement_time')->nullable(); // Campo para a hora
+        $table->timestamps();
+    });
+    
+}
+
 
     public function down()
     {

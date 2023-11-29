@@ -2,48 +2,55 @@
 
 namespace App\Imports;
 
-use Maatwebsite\Excel\Concerns\ToModel;
 use App\Models\Diabetes;
-use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\WithStartRow;
-use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-
-class DiabetesImport implements ToModel, WithStartRow
+class DiabetesImport implements ToModel, WithHeadingRow
 {
-    use Importable;
+    protected $userId;
 
-    /**
-     * @return int
-     */
-    public function startRow(): int
+    public function __construct(Authenticatable $user)
     {
-        return 2; // Pule a primeira linha (cabeçalho)
+        $this->userId = $user->id;
     }
 
     public function model(array $row)
     {
-        // Certifique-se de que o array $row possui pelo menos 2 elementos (created_at, glucose_level)
-        if (count($row) >= 2) {
-            // Verifique se glucose_level é null e, se for, defina um valor padrão ou ignore o registro
-            if ($row[1] === null) {
-                Log::warning('O valor de glucose_level é nulo. Ignorando este registro.');
-                return null;
+        if (!empty($row['glucose_level']) && $this->userId) {
+            
+            if(is_numeric($row['measurement_date'])) {
+                $measurementDate = Date::excelToDateTimeObject($row['measurement_date'])->format('Y-m-d');
+                $measurementTime = Date::excelToDateTimeObject($row['measurement_time'])->format('h:i:s');
+
+                // $data = "$measurementDate $measurementTime";
             }
 
+            $classification = $this->classifyGlucoseLevel($row['glucose_level']);
+
             return new Diabetes([
-                'device_id' => 1, // Substitua isso pelo ID do dispositivo correto
-                'user_id' => auth()->id(), // Se desejar associar o registro ao usuário autenticado
-                'glucose_level' => $row[1],
-                'created_at' => Carbon::parse($row[0]), // Converta a string para um objeto Carbon
+                'device_id' => 2,
+                'user_id' => $this->userId,
+                'glucose_level' => $row['glucose_level'],
+                'classification' => $classification,
+                'measurement_date' => $measurementDate,
+                'measurement_time' => $measurementTime
             ]);
+        }
+
+        return null;
+    }
+
+    protected function classifyGlucoseLevel($glucoseLevel)
+    {
+        if ($glucoseLevel < 70) {
+            return 'Baixa';
+        } elseif ($glucoseLevel >= 70 && $glucoseLevel <= 180) {
+            return 'Normal';
         } else {
-            // Trate o caso em que o array $row não possui as chaves esperadas
-            // Isso pode incluir o log de um erro ou outro tratamento adequado
-            Log::error('Número insuficiente de elementos no array $row durante a importação.');
-            return null;
+            return 'Alta';
         }
     }
 }
-
