@@ -26,19 +26,20 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
     Route::resource('dashboard', DashboardController::class);
+    
     Route::get('/profile', [UserController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit/{id}', [UserController::class, 'edit'])->name('profile.edit');
     // Route::post('/profile/update/{id}', [UserController::class, 'update'])->name('profile.update'); //assim deu o problema pra resolver tem que ser assim: 
     Route::post('/profile/update', [UserController::class, 'update'])->name('profile.update'); // assim tambem funcionou depois que comentei a linha de cima
+    
     Route::resource('diabetes', DiabetesController::class);
     Route::resource('pressure', BloodPressureController::class);
     Route::get('/diabetes', [DiabetesController::class, 'index'])->name('diabetes.index');
     Route::post('/diabetes/import', [DiabetesController::class, 'import'])->name('diabetes.import');
-
     Route::get('/pressure', [BloodPressureController::class, 'index'])->name('pressure.index');
     Route::post('/pressure/import', [BloodPressureController::class, 'import'])->name('pressure.import');
-
 
     Route::resource('device', DeviceController::class);
     Route::get('/device', [DeviceController::class, 'index'])->name('device.index');

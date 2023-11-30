@@ -81,38 +81,38 @@ class UserController extends Controller
             'weight' => 'nullable|numeric',
             'allergies' => 'nullable|string',
             'medical_conditions' => 'nullable|string',
-            'profile-image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'required' => ':attribute é obrigatório',
             'string' => 'O campo :attribute deve ser uma string',
             'date_format' => 'O campo :attribute deve ser uma data válida',
             'numeric' => 'O campo :attribute deve conter apenas números',
             'celular_com_ddd' => 'O campo :attribute deve estar no formato correto',
+            'image' => 'O campo :attribute deve ser uma imagem',
+            'mimes' => 'O campo :attribute deve ser do tipo jpeg, png, jpg ou gif',
+            'max' => 'O tamanho máximo para o campo :attribute é de 2 MB',
         ], [
             'name' => 'Nome',
             'date_of_birth' => 'Data de Nascimento',
             'gender' => 'O campo Sexo',
             'phone_number' => 'Número de Telefone',
             'cpf' => 'CPF',
+            'profile_picture' => 'Foto de Perfil',
         ]);
 
-        $user->update($validatedData);
-
-         // Lógica para upload da foto
-    if ($request->hasFile('profile-image')) {
-        // Excluir a foto antiga se existir
-        if ($user->profile_picture) {
-            Storage::delete($user->profile_picture);
+        if ($request->hasFile('profile_picture')) {
+            $image = $request->file('profile_picture');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+        
+            $image->move(public_path('images/profile'), $imageName);
+            $validatedData['profile_picture'] = $imageName;
         }
+        
+        $user->update($validatedData);
+        
 
-        // Fazer o upload da nova foto
-        $imageData = file_get_contents($request->file('profile-image')->getRealPath());
-        $user->update(['profile_picture' => $imageData]);
+        return redirect()->route('profile.index')->with('success', 'Perfil atualizado com sucesso');
     }
-
-    return redirect()->route('profile.index')->with('success', 'Perfil atualizado com sucesso');
-}
 
     /**
      * Remove the specified resource from storage.

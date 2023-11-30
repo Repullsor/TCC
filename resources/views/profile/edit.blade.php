@@ -43,10 +43,13 @@
                         <div>
                             <div class="text-center">
                                 <label for="profile-image" style="cursor: pointer;">
-                                    <i class="fa-solid fa-circle-user" style="font-size: 100px;"></i>
+                                    @if (auth()->user()->profile_picture)
+                                        <img src="{{ url('caminho/do/seu/upload/' . auth()->user()->profile_picture) }}" alt="Foto de Perfil" style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                        <i class="fa-solid fa-circle-user" style="font-size: 100px;"></i>
+                                    @endif
                                 </label>
-                                <input type="file" id="profile-image" name="profile-image" accept="image/*"
-                                    style="display: none;">
+                                <input type="file" id="profile-image" name="profile-image" accept="image/*" style="display: none;">
                             </div>
                         </div>
                         <div>
@@ -205,6 +208,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
 <script>
     $(document).ready(function() {
