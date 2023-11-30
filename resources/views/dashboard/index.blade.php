@@ -26,35 +26,31 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Gráficos de Saúde</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Gráfico de Glicose</h3>
-                                        <button id="toggleGlucoseChart" class="btn btn-primary btn-sm float-end">Alternar
-                                            Gráfico</button>
-                                    </div>
-                                    <div class="card-body">
-                                        <canvas id="glucoseChart"
-                                            style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
-                                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico de Glicose</h3>
+                                    <button id="toggleGlucoseChart" class="btn btn-primary btn-sm float-end">Alternar
+                                        Gráfico</button>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="glucoseChart"
+                                        style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Gráfico de Pressão Arterial</h3>
-                                        <button id="toggleBloodPressureChart"
-                                            class="btn btn-primary btn-sm float-end">Alternar Gráfico</button>
-                                    </div>
-                                    <div class="card-body">
-                                        <canvas id="bloodPressureChart"
-                                            style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
-                                    </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico de Pressão Arterial</h3>
+                                    <button id="toggleBloodPressureChart" class="btn btn-primary btn-sm float-end">Alternar
+                                        Gráfico</button>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="bloodPressureChart"
+                                        style="min-height: 400px; height: 400px; max-height: 400px; max-width: 100%;"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +67,7 @@
 <script>
     $(function() {
         @if (isset($glucoseLabels) && isset($glucoseValues))
-        
+
             var glucoseData = {
                 labels: {!! json_encode($glucoseLabels) !!},
                 datasets: [{

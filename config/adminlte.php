@@ -334,11 +334,12 @@ return [
             'text' => 'Gráficos',
             'url'  => '/dashboard',
             'icon' => 'fa-solid fa-chart-pie',
-        ],[
-            'text' => 'Estatísticas',
-            'url'  => 'admin/settings',
-            'icon' => 'fa-solid fa-chart-column',
         ],
+        // [
+        //     'text' => 'Estatísticas',
+        //     'url'  => 'admin/settings',
+        //     'icon' => 'fa-solid fa-chart-column',
+        // ],
         [
             'text'    => 'Medições',
             'icon'    => 'fa fa-list',

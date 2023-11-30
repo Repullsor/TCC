@@ -18,9 +18,10 @@
             <div class="row mb-2">
                 <div class="col-sm-12 d-flex justify-content-between">
                     <h1>Pressão Arterial</h1>
-                    <button type="button" class="btn btn-primary" onclick="submitForm()">
+                    <button type="button" id="btnDownload" class="btn btn-primary" onclick="downloadPlanilha()">
                         <i class="fa fa-download"></i> Baixar Planilha
                     </button>
+
                 </div>
             </div>
         </div>
@@ -197,4 +198,39 @@
                 }
             });
         });
+    </script>
+    <script>
+        function downloadPlanilha() {
+            // Seus dados da planilha
+            var dados = [{
+                    systolic: 120,
+                    diastolic: 80,
+                    measurement_date: '01/10/2023',
+                    measurement_time: '08:00'
+                },
+                // Adicione mais dados conforme necessário
+            ];
+
+            // Cria um objeto CSV a partir dos dados
+            var csv = 'systolic,diastolic,measurement_date,measurement_time\n';
+            dados.forEach(function(item) {
+                csv += item.systolic + ',' + item.diastolic + ',' + item.measurement_date + ',' + item
+                    .measurement_time + '\n';
+            });
+
+            // Cria um elemento de link temporário
+            var link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            link.target = '_blank';
+            link.download = 'planilha.csv';
+
+            // Adiciona o link ao corpo do documento
+            document.body.appendChild(link);
+
+            // Simula um clique no link para iniciar o download
+            link.click();
+
+            // Remove o link do corpo do documento
+            document.body.removeChild(link);
+        }
     </script>

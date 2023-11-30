@@ -18,7 +18,7 @@
             <div class="row mb-2">
                 <div class="col-sm-12 d-flex justify-content-between">
                     <h1>Glicemia</h1>
-                    <button type="button" class="btn btn-primary" onclick="submitForm()">
+                    <button type="button" id="btnDownload" class="btn btn-primary" onclick="downloadPlanilha()">
                         <i class="fa fa-download"></i> Baixar Planilha
                     </button>
                 </div>
@@ -43,11 +43,12 @@
                                         <div class="custom-file">
                                             <input type="file" name="file" id="file" class="custom-file-input"
                                                 onchange="displayFileName()">
-                                            <label class="custom-file-label" for="file" id="fileNameLabel">Escolher arquivo</label>
+                                            <label class="custom-file-label" for="file" id="fileNameLabel">Escolher
+                                                arquivo</label>
                                         </div>
                                     </div>
                                 </div>
-        
+
                                 <div class="form-group col-md-6 mt-5">
                                     <label></label>
                                     <button type="submit" class="btn btn-success">
@@ -57,21 +58,21 @@
                             </div>
                         </form>
                         <div id="fileData" class="mt-3">
-                        <!-- Exibir mensagens de sucesso ou erro -->
-                        @if(session('success'))
-                            <div class="alert alert-success mt-3">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if(session('error'))
-                            <div class="alert alert-danger mt-3">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+                            <!-- Exibir mensagens de sucesso ou erro -->
+                            @if (session('success'))
+                                <div class="alert alert-success mt-3">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger mt-3">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
+
 
                 <!-- Tabela de Dispositivos -->
                 <div class="card card-primary mt-3">
@@ -111,8 +112,8 @@
                             <p>Nenhum dado de diabetes encontrado para este usuário.</p>
                         @endif
                     </div>
-                    
-                    
+
+
                 </div>
 
 
@@ -129,7 +130,7 @@
             $('#fileNameLabel').text(fileName); // Atualiza o conteúdo da etiqueta com o nome do arquivo
         }
     </script>
- 
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -197,4 +198,37 @@
                 }
             });
         });
+    </script>
+    <script>
+        function downloadPlanilha() {
+            // Seus dados da planilha
+            var dados = [{
+                    glucose_level: 100,
+                    measurement_date: '2023-01-01',
+                    measurement_time: '12:00'
+                },
+                // Adicione mais dados conforme necessário
+            ];
+
+            // Cria um objeto CSV a partir dos dados
+            var csv = 'glucose_level,measurement_date,measurement_time\n';
+            dados.forEach(function(item) {
+                csv += item.glucose_level + ',' + item.measurement_date + ',' + item.measurement_time + '\n';
+            });
+
+            // Cria um elemento de link temporário
+            var link = document.createElement('a');
+            link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+            link.target = '_blank';
+            link.download = 'planilha.csv';
+
+            // Adiciona o link ao corpo do documento
+            document.body.appendChild(link);
+
+            // Simula um clique no link para iniciar o download
+            link.click();
+
+            // Remove o link do corpo do documento
+            document.body.removeChild(link);
+        }
     </script>
