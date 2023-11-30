@@ -95,6 +95,7 @@
                                         <th>Sistólica</th>
                                         <th>Diastólica</th>
                                         <th>Classificação</th>
+                                        <th>Ações</th> <!-- Adicionado esta coluna -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -106,6 +107,15 @@
                                             <td>{{ $data->systolic }}</td>
                                             <td>{{ $data->diastolic }}</td>
                                             <td>{{ $data->classification }}</td>
+                                            <td>
+                                                <form action="{{ route('blood-pressure.destroy', $data->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -72,9 +72,16 @@ class BloodPressureController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(BloodPressure $bloodPressure)
     {
-        //
+        // Verifique se o usuário autenticado é o proprietário do registro
+        if (auth()->user()->id == $bloodPressure->user_id) {
+            $bloodPressure->delete();
+
+            return redirect()->route('blood-pressure.index')->with('success', 'Registro excluído com sucesso.');
+        } else {
+            return redirect()->route('blood-pressure.index')->with('error', 'Você não tem permissão para excluir este registro.');
+        }
     }
 
     public function import(Request $request)

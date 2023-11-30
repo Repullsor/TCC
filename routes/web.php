@@ -37,8 +37,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('diabetes', DiabetesController::class);
     Route::resource('pressure', BloodPressureController::class);
     Route::get('/diabetes', [DiabetesController::class, 'index'])->name('diabetes.index');
+    Route::delete('/diabetes/{diabetes}', [DiabetesController::class, 'destroy'])->name('diabetes.destroy');
     Route::post('/diabetes/import', [DiabetesController::class, 'import'])->name('diabetes.import');
     Route::get('/pressure', [BloodPressureController::class, 'index'])->name('pressure.index');
+    Route::delete('/blood-pressure/{bloodPressure}', [BloodPressureController::class, 'destroy'])->name('pressure.destroy');
     Route::post('/pressure/import', [BloodPressureController::class, 'import'])->name('pressure.import');
 
     Route::resource('device', DeviceController::class);

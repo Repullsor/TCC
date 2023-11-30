@@ -77,9 +77,16 @@ class DiabetesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Diabetes $diabetes)
     {
-        //
+        // Verifique se o usuário autenticado é o proprietário do registro
+        if (auth()->user()->id == $diabetes->user_id) {
+            $diabetes->delete();
+
+            return redirect()->route('diabetes.index')->with('success', 'Registro excluído com sucesso.');
+        } else {
+            return redirect()->route('diabetes.index')->with('error', 'Você não tem permissão para excluir este registro.');
+        }
     }
 
     public function import(Request $request)
