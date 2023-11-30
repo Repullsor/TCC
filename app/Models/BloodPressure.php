@@ -13,6 +13,8 @@ class BloodPressure extends Model
         'diastolic',
         'classification',
         'comments',
+        'measurement_date',
+        'measurement_time',
     ];
 
     public function device()

@@ -16,6 +16,8 @@ class CreateBloodPressuresTable extends Migration
             $table->integer('diastolic'); // Pressão diastólica
             $table->enum('classification', ['Normal', 'Alta', 'Baixa']); // Classificação
             $table->text('comments')->nullable(); // Comentários opcionais
+            $table->date('measurement_date')->nullable(); // Campo para a data
+            $table->time('measurement_time')->nullable(); // Campo para a hora
             $table->timestamps();
         });
     }

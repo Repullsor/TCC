@@ -23,9 +23,16 @@ class DiabetesController extends Controller
 
         $diabetesData = Diabetes::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
+        // Formatar a data antes de enviar para a view
+        $formattedDiabetesData = $diabetesData->map(function ($data) {
+            $data->measurement_date = \Carbon\Carbon::parse($data->measurement_date)->format('d/m/Y');
+            return $data;
+        });
 
-        return view('diabetes.index', compact('diabetesData'));
+        return view('diabetes.index', compact('formattedDiabetesData'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -76,18 +83,18 @@ class DiabetesController extends Controller
     }
 
     public function import(Request $request)
-{
-    $request->validate([
-        'file' => 'required|mimes:xlsx,csv',
-    ]);
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
 
-    $file = $request->file('file');
-    $user = auth()->user(); // Obtenha o usuário autenticado
+        $file = $request->file('file');
+        $user = auth()->user(); // Obtenha o usuário autenticado
 
-    // Use a instância do importador para processar o arquivo Excel
-    $import = new DiabetesImport($user);
-    Excel::import($import, $file);
+        // Use a instância do importador para processar o arquivo Excel
+        $import = new DiabetesImport($user);
+        Excel::import($import, $file);
 
-    return redirect()->back()->with('success', 'Dados importados com sucesso!');
-}
+        return redirect()->back()->with('success', 'Dados importados com sucesso!');
+    }
 }

@@ -14,24 +14,21 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $measurements = Diabetes::where('user_id', $user->id)->get();
 
-        $startDate = $measurements->min('created_at');
-        $endDate = $measurements->max('created_at');
+        $glucoseData = $this->getGlucoseDataForUser($user->id);
 
-        $labels = [];
-        $values = [];
+        $labels = $glucoseData->pluck('measurement_date');
+        $values = $glucoseData->pluck('glucose_level');
 
-        $currentDate = Carbon::parse($startDate);
-
-        while ($currentDate->lte(Carbon::parse($endDate))) {
-            $labels[] = $currentDate->format('Y-m-d');
-            $values[] = $measurements->where('created_at', '>=', $currentDate)->where('created_at', '<', $currentDate->copy()->addDay())->avg('glucose_level') ?? 0;
-            $currentDate->addDay();
-        }
-
-        return view('dashboard.index', compact('user', 'labels', 'values'));
+        // Passando os dados para a visualização
+        return view('dashboard.index', compact('user', 'labels', 'values', 'glucoseData'));
     }
+
+    private function getGlucoseDataForUser($userId)
+    {
+        return Diabetes::where('user_id', $userId)->get();
+    }
+
 
     /**
      * Show the form for creating a new resource.

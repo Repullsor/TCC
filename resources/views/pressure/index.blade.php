@@ -19,7 +19,7 @@
                 <div class="col-sm-12 d-flex justify-content-between">
                     <h1>Pressão Arterial</h1>
                     <button type="button" class="btn btn-primary" onclick="submitForm()">
-                        <i class="fa fa-download"></i> Exportar Dados
+                        <i class="fa fa-download"></i> Baixar Planilha
                     </button>
                 </div>
             </div>
@@ -33,7 +33,8 @@
                     </div>
                     <div class="card-body text-center">
                         <!-- Formulário de Importação -->
-                        <form action="" method="post" enctype="multipart/form-data" id="importForm">
+                        <form action="{{ route('pressure.import') }}" method="post" enctype="multipart/form-data"
+                            id="importForm">
                             @csrf
                             <div class="row">
                                 <div class="form-group col ml-5 mt-3">
@@ -42,25 +43,37 @@
                                         <div class="custom-file">
                                             <input type="file" name="file" id="file" class="custom-file-input"
                                                 onchange="displayFileName()">
-                                            <label class="custom-file-label" for="file">Escolher arquivo</label>
+                                            <label class="custom-file-label" for="file" id="fileNameLabel">Escolher
+                                                arquivo</label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-md-6 mt-5">
                                     <label></label>
-                                    <button type="button" class="btn btn-success" onclick="submitForm()">
+                                    <button type="submit" class="btn btn-success">
                                         <i class="fas fa-cloud-upload-alt"></i> Importar Dados
                                     </button>
                                 </div>
                             </div>
                         </form>
-                        <div id="fileData" class="mt-3">
+                        <div id="fileData" class="mt-3"><!-- Exibir mensagens de sucesso ou erro -->
+                            @if (session('success'))
+                                <div class="alert alert-success mt-3">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger mt-3">
+                                    {{ session('error') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
 
-                <!-- Tabela de Pressão Arterial -->
+
+                <!-- Tabela de Dispositivos -->
                 <div class="card card-primary mt-3">
                     <div class="card-header">
                         <h3 class="card-title">Dados Importados</h3>
@@ -71,34 +84,33 @@
                         </div>
                     </div>
                     <div class="card-body" style="display: block;">
-                        @if ($bloodPressureData)
-                            <div class="table-container">
-                                <table class="table">
-                                    <thead>
+                        @if ($formattedbloodPressureData->isNotEmpty())
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Data</th>
+                                        <th>Hora</th>
+                                        <th>Sistólica</th>
+                                        <th>Diastólica</th>
+                                        <th>Classificação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($formattedbloodPressureData as $key => $data)
                                         <tr>
-                                            <th>#</th>
-                                            <th>Data</th>
-                                            <th>Hora</th>
-                                            <th>Sistólica</th>
-                                            <th>Diastólica</th>
-                                            <th>Classificação</th>
+                                            <td>{{ $formattedbloodPressureData->count() - $key }}</td>
+                                            <td>{{ $data->measurement_date }}</td>
+                                            <td>{{ $data->measurement_time }}</td>
+                                            <td>{{ $data->systolic }}</td>
+                                            <td>{{ $data->diastolic }}</td>
+                                            <td>{{ $data->classification }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($bloodPressureData as $key => $data)
-                                            <tr>
-                                                <td>{{ $bloodPressureData->count() - $key }}</td>
-                                                <td>{{ $data->created_at->format('d/m/Y') }}</td>
-                                                <td>{{ $data->created_at->format('H:i:s') }}</td>
-                                                <td>{{ $data->systolic }}</td>
-                                                <td>{{ $data->diastolic }}</td>
-                                                <td>{{ $data->classification }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <p>Nenhum dado de pressão arterial encontrado para este usuário.</p>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        @else
+                            <p>Nenhum dado de pressão arterial encontrado para este usuário.</p>
                         @endif
                     </div>
                 </div>
@@ -111,29 +123,13 @@
     @endsection
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
-        function submitForm() {
-            // Simula o envio do formulário para ilustração
-            // Aqui você deve adicionar a lógica real de upload e processamento do arquivo no backend
-            alert('Formulário enviado! Aqui você deve lidar com o upload e processamento do arquivo.');
-
-            // Atualiza a área de exibição de dados do arquivo (exemplo)
-            updateFileData('Exemplo de dados do arquivo...');
-        }
-
-        function updateFileData(data) {
-            // Atualiza a área de exibição de dados do arquivo
-            document.getElementById('fileData').innerHTML = data;
-        }
-    </script>
-    <script>
-        // Função para exibir o nome do arquivo após a seleção
         function displayFileName() {
-            var fileName = document.getElementById('file').files[0].name;
-            document.getElementById('fileData').innerHTML = '<p>Arquivo selecionado: ' + fileName + '</p>';
+            var fileName = $('#file').val().split('\\').pop(); // Obtém apenas o nome do arquivo, removendo o caminho
+            $('#fileNameLabel').text(fileName); // Atualiza o conteúdo da etiqueta com o nome do arquivo
         }
     </script>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\DiabetesImport;
+use App\Imports\BloodPressureImport;
 use App\Models\BloodPressure;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,9 +16,16 @@ class BloodPressureController extends Controller
     public function index()
     {
         $user = auth()->user();
+
         $bloodPressureData = BloodPressure::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('pressure.index', compact('user', 'bloodPressureData'));
+        // Formatar a data antes de enviar para a view
+        $formattedbloodPressureData = $bloodPressureData->map(function ($data) {
+            $data->measurement_date = \Carbon\Carbon::parse($data->measurement_date)->format('d/m/Y');
+            return $data;
+        });
+
+        return view('pressure.index', compact('formattedbloodPressureData'));
     }
 
 
@@ -68,5 +75,21 @@ class BloodPressureController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv',
+        ]);
+
+        $file = $request->file('file');
+        $user = auth()->user(); // Obtenha o usuário autenticado
+
+        // Use a instância do importador para processar o arquivo Excel
+        $import = new BloodPressureImport($user);
+        Excel::import($import, $file);
+
+        return redirect()->back()->with('success', 'Dados importados com sucesso!');
     }
 }

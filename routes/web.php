@@ -36,6 +36,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/diabetes', [DiabetesController::class, 'index'])->name('diabetes.index');
     Route::post('/diabetes/import', [DiabetesController::class, 'import'])->name('diabetes.import');
 
+    Route::get('/pressure', [BloodPressureController::class, 'index'])->name('pressure.index');
+    Route::post('/pressure/import', [BloodPressureController::class, 'import'])->name('pressure.import');
+
 
     Route::resource('device', DeviceController::class);
     Route::get('/device', [DeviceController::class, 'index'])->name('device.index');

@@ -28,7 +28,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Gráfico de Linha</h3>
+                            <h3 class="card-title">Gráfico de Glicose</h3>
                         </div>
                         <div class="card-body">
                             <canvas id="lineChart"
@@ -46,8 +46,8 @@
                     <h3 class="card-title">Gráfico de Barras (Média Diária)</h3>
                 </div>
                 <div class="card-body">
-                    <div id="barChartDaily"
-                        style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;"></div>
+                    <div id="barChartDaily" style="min-height: 300px; height: 300px; max-height: 300px; max-width: 100%;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,89 +55,117 @@
         <!-- ... Outras estatísticas ... -->
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+@endsection
 
-    <script>
-        $(function () {
-            google.charts.load('current', { 'packages': ['corechart'] });
-            google.charts.setOnLoadCallback(drawBarChart);
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-            function drawBarChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Dias');
-                data.addColumn('number', 'Média Diária');
-                data.addRows([
-                    @foreach($labels as $key => $label)
-                        ['{{ $label }}', {{ $values[$key] }}],
-                    @endforeach
-                ]);
-
-                var options = {
-                    title: 'Média Diária dos Níveis de Glicose',
-                    hAxis: {
-                        title: 'Dias',
-                        titleTextStyle: { color: 'green' }
-                    },
-                    vAxis: {
-                        title: 'Média Diária',
-                        minValue: 0
-                    }
-                };
-
-                var chart = new google.visualization.ColumnChart(document.getElementById('barChartDaily'));
-                chart.draw(data, options);
-            }
+<script>
+    $(function() {
+        google.charts.load('current', {
+            'packages': ['corechart']
         });
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+        google.charts.setOnLoadCallback(drawBarChart);
 
-    <script>
-        $(function() {
-            var data = {
-                labels: {!! json_encode($labels) !!},
-                datasets: [{
-                    label: 'Nível de Glicose',
-                    data: {!! json_encode($values) !!},
-                    fill: false,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                }]
-            };
+        function drawBarChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Dias');
+            data.addColumn('number', 'Média Diária');
+            data.addRows([
+                @foreach ($labels as $key => $label)
+                    ['{{ $label }}', {{ $values[$key] }}],
+                @endforeach
+            ]);
 
             var options = {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Dias'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Nível de Glicose'
-                        }
+                title: 'Média Diária dos Níveis de Glicose',
+                hAxis: {
+                    title: 'Dias',
+                    titleTextStyle: {
+                        color: 'green'
                     }
                 },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom'
-                    }
+                vAxis: {
+                    title: 'Média Diária',
+                    minValue: 0
                 }
             };
 
-            var ctx = document.getElementById('lineChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: data,
-                options: options
-            });
+            var chart = new google.visualization.ColumnChart(document.getElementById('barChartDaily'));
+            chart.draw(data, options);
+        }
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    $(function() {
+        var data = {
+            labels: {!! json_encode($labels) !!},
+            datasets: [{
+                label: 'Nível de Glicose',
+                data: {!! json_encode($values) !!},
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+            }]
+        };
+
+        var options = {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Dias'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Nível de Glicose'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed.y + ' mg/dL'; // Adicione a unidade desejada
+
+                            // Adicione informações de data e hora se disponíveis
+                            if (
+                                context.dataset.data[context.dataIndex].measurement_date &&
+                                context.dataset.data[context.dataIndex].measurement_time
+                            ) {
+                                label += '\nData: ' + context.dataset.data[context.dataIndex]
+                                    .measurement_date +
+                                    '\nHora: ' + context.dataset.data[context.dataIndex]
+                                    .measurement_time;
+                            }
+
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        var ctx = document.getElementById('lineChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
         });
-    </script>
-@endsection
+    });
+</script>

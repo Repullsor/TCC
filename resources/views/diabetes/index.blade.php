@@ -19,7 +19,7 @@
                 <div class="col-sm-12 d-flex justify-content-between">
                     <h1>Glicemia</h1>
                     <button type="button" class="btn btn-primary" onclick="submitForm()">
-                        <i class="fa fa-download"></i> Exportar Dados
+                        <i class="fa fa-download"></i> Baixar Planilha
                     </button>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="card-body" style="display: block;">
-                        @if ($diabetesData)
+                        @if ($formattedDiabetesData->isNotEmpty())
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -96,11 +96,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($diabetesData as $key => $data)
+                                    @foreach ($formattedDiabetesData as $key => $data)
                                         <tr>
-                                            <td>{{ $diabetesData->count() - $key }}</td>
-                                            <td></td>
-                                            <td></td>
+                                            <td>{{ $formattedDiabetesData->count() - $key }}</td>
+                                            <td>{{ $data->measurement_date }}</td>
+                                            <td>{{ $data->measurement_time }}</td>
                                             <td>{{ $data->glucose_level }}</td>
                                             <td>{{ $data->classification }}</td>
                                         </tr>
@@ -111,6 +111,8 @@
                             <p>Nenhum dado de diabetes encontrado para este usuário.</p>
                         @endif
                     </div>
+                    
+                    
                 </div>
 
 
